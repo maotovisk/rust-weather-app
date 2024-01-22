@@ -1,0 +1,90 @@
+
+import { StyleMetrics , ScrollView} from "std-widgets.slint";
+
+component SideBarItem inherits Rectangle {
+    in-out property <string> label;
+    in-out property <image> icon_path;
+    in-out property <bool> active;
+
+    callback activate;
+    
+    border-radius: 15px;
+    
+    states [
+        hover when touch.has-hover: {
+            background: StyleMetrics.window-background.brighter(0.2);
+        }
+        hover when active: {
+            background: StyleMetrics.window-background.brighter(0.8);
+        }
+    ]
+
+    background: active ? StyleMetrics.window-background.brighter(0.8) : transparent;
+
+
+    VerticalLayout {
+        padding: 15px;
+        spacing: 5px;
+        alignment: center;
+        
+        Image {
+            source: icon-path;
+            height: 32px;
+            colorize: white;
+        }
+        
+        Text {
+            horizontal-alignment: center;
+            vertical-alignment: center;
+            text: label;
+
+            font-size: 12px;
+        }
+    }
+
+    touch := TouchArea {
+        clicked => {
+            root.activate();
+        }
+    }
+} 
+export component SideBar inherits Rectangle {
+    in-out property <string> selected_item;
+    in-out property <[{label: string, icon: image}]> top_items;
+    in-out property <[{label: string, icon: image}]> bottom_items;
+
+    max-width: 100px;
+
+    background: StyleMetrics.window-background.darker(0.2);
+
+    VerticalLayout {
+        alignment: start;
+        padding: 15px;
+        spacing: 10px;
+
+        for item[index] in root.top-items: SideBarItem {
+            label: item.label;
+            icon-path: item.icon;
+            active: item.label == root.selected-item;
+
+            activate => {
+                root.selected_item = item.label;
+            }
+        }
+    }
+    VerticalLayout {
+        alignment: end;
+        padding: 15px;
+        spacing: 10px;
+
+        for item[index] in root.bottom-items: SideBarItem {
+            label: item.label;
+            icon-path: item.icon;
+            active: item.label == root.selected-item;
+
+            activate => {
+                root.selected_item = item.label;
+            }
+        }
+    }
+}

@@ -1,0 +1,36 @@
+
+import { SideBar } from "./components/sidebar.slint";
+import { MainPage, CityInfo, ApiManagement } from "./pages/mainpage.slint";
+import { MapPage } from "./pages/mappage.slint";
+import { ForecastPage } from "./pages/forecastpage.slint";
+import { SettingsPage } from "./pages/settingspage.slint";
+
+export {ApiManagement, CityInfo}
+
+export component FodaseWindow inherits Window {
+
+    preferred-width: 700px;
+    preferred-height: 500px;
+    title: "Fodase Weather";
+    icon: @image-url("assets/icons/umbrella.svg");
+
+    HorizontalLayout {
+        sb:=SideBar {
+            selected-item: "Overview";
+            top-items: [
+                {label: "Overview", icon: @image-url("assets/icons/home.svg")},
+                {label: "Map", icon: @image-url("assets/icons/map.svg")},
+                {label: "Daily Forecast", icon: @image-url("assets/icons/forecast.svg")},
+                ];
+            bottom-items: [
+                {label: "Settings", icon: @image-url("assets/icons/settings.svg")},
+            ];
+        }
+
+        if (sb.selected-item == "Overview") : MainPage {}
+        if (sb.selected-item == "Map") : MapPage {}
+        if (sb.selected-item == "Daily Forecast") : ForecastPage {}
+        if (sb.selected-item == "Settings") : SettingsPage {}
+
+    }
+}

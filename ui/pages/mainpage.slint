@@ -1,0 +1,69 @@
+
+import { StyleMetrics , TextEdit, HorizontalBox, LineEdit, GroupBox, VerticalBox, ListView, StandardListView, Button, ScrollView} from "std-widgets.slint";
+import { ComboBox } from "../components/customcombobox.slint";
+
+export struct CityInfo { city: string, temperature: int }
+
+export global ApiManagement {
+    pure callback search-city(string) -> [CityInfo];
+}
+
+export component MainPage inherits VerticalBox {
+    GroupBox {
+        title: "City Search";
+        vertical-stretch: 0;
+
+        callback search_city({text: string});
+
+        HorizontalBox {
+            padding: 0px;
+            Text {
+                vertical-alignment: center;
+                text: "City Name";  
+            }
+
+            city := LineEdit {
+                placeholder-text: "Enter city name";
+            }
+
+            go := Button { 
+                text: "Go";
+
+                clicked => {
+                    citiesview.cities = ApiManagement.search_city(city.text);
+                }
+            }
+        }
+    }
+    citiesview := ListView {
+        in-out property <[CityInfo]> cities;
+        
+        for item[index] in cities: Rectangle {
+            Text {
+                text: item.city;
+                vertical-alignment: center;
+            }
+
+            Text {
+                text: item.temperature;
+                vertical-alignment: center;
+                horizontal-alignment: right;
+            }
+        }
+    }
+
+    HorizontalBox {
+        height: 48px;
+        alignment: end;
+
+        Rectangle {}
+
+        Button {
+            text: "Save";
+
+            clicked => {
+            }
+        }
+    }
+ 
+   }
